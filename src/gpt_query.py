@@ -10,7 +10,10 @@ story = open("../data/stories/story.txt", "r").read()
 # print(k)
   
 # reading the file
-def generate_song():
+def generate_character_graph(story_file):
+
+    story = open(story_file, "r").read()
+
     '''
     Struggling to find an example prompt that will create a consistently formatted output
     Without one, the format may change slightly, but the existence of one will change what
@@ -31,10 +34,13 @@ def generate_song():
         max_tokens = 400)
     text = response['choices'][0]['text']
     print(response)
-    # for i in k:
+    G = text_to_graph(text)
+    print(G.nodes)
+    print(G.nodes['Karen'])
 
     return text
 
 if __name__ == "__main__":
     print("hello")
-    print(generate_song())
+    story_file = "../data/stories/good_scary_story.txt"
+    generate_character_graph(story_file)
