@@ -1,37 +1,36 @@
 import networkx as nx
+from sklearn.metrics.pairwise import cosine_similarity
+from sentence_transformers import SentenceTransformer
 
-"""
-Input: two lists of event dictionaries
-Attributes: subject, verb, object, modifier
+similarity_model = SentenceTransformer('sentence-transformers/all-MiniLM-L6-v2')
 
-Output: Averaged exact match similarity of <s, v, o, m> of events in both lists.
-"""
-def compare_event_lists(l1, l2):
-    # Averaged exact match similarity of <s, v, o, m> of events in both lists.
-    # Takes the maximum
+def concatenate_graph(G):
+    concat_dict = {}
+    for i in G.nodes:
+        attributes = G.nodes[i]['attributes']
+        concat_dict[i] = ", ".join(attributes)
+    return concat_dict
+
+def compare_concatenated_graphs(G1, G2):
+    # Averaged semantic similarity of exact matched characters.
+    # If there is a new character/mismatched character, add penalty
     similarity = []
-    for i in range(len(l1)):
-        max_similarity = 0
-        for j in range(len(l2)):
-            event1 = l1[i]
-            event2 = l2[j]
-            curr_similarity = 0
-
-            for key in event1.keys():
-                if event1[key] == event2[key]:
-                    curr_comp += 0.25
-
-            # Scale by difference in event numbers.
-            # Equal events should not be far apart (timewise)
-
-            total_len = max(i, j)
-            scaling_factor = (total_len - abs(i - j)) / total_len
-
-            if curr_similarity * scaling_factor >= max_similarity:
-                max_similarity = curr_similarity
-
-    similarity.append(max_similarity)
+    for char in G1.keys():
+        if char in G2:
+            print(G1)
+            print(G2)
+            similarity.append(semantic_similarty(G1[char], G2[char]))
     return sum(similarity) / len(similarity)
+
+def semantic_similarty(first, second):
+    embeddings = similarity_model.encode([first, second])
+
+    first = embeddings[0].reshape(1, -1)
+    second = embeddings[1].reshape(1, -1)
+
+    return cosine_similarity(first, second)
+
+
 
 if __name__ == "__main__":
     base_G = nx.read_gml("../data/Character_graphs/basic_story.gml")
@@ -39,4 +38,7 @@ if __name__ == "__main__":
     good_G = nx.read_gml("../data/Character_graphs/good_scary_story.gml")
     c_base_G = concatenate_graph(base_G)
     c_bad_G = concatenate_graph(bad_G)
+    c_good_G = concatenate_graph(good_G)
+    print(compare_concatenated_graphs(c_base_G, c_bad_G))
+    print(compare_concatenated_graphs(c_base_G, c_good_G))
 

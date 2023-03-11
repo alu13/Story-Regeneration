@@ -42,6 +42,6 @@ def generate_character_graph(story_file):
 
 if __name__ == "__main__":
     print("hello")
-    story_file = "../../data/stories/writing_prompts/carnival.txt"
+    story_file = "../../data/stories/writing_prompts/revised_carnival.txt"
     text = generate_character_graph(story_file)
     # text_to_graph(text)
