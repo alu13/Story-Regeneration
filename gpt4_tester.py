@@ -38,27 +38,27 @@ Gets a GPT-4 fine-tuned model response to a query
 Uses the "Chat" openai endpoint
 """
 
-def gpt_query_chat(story):
-    open_prompt = story + "\n " + "List all characters and their attributes below. Then list all relationships between characters below that: \
-        \n Example format: \
-        \n Albert: good at math, smart \
-        \n Anna: cool, popular \
-        \n (Albert, Anna, friends)"
- 
-    print(open_prompt)
+def gpt_query_chat(prompt):
     response = openai.ChatCompletion.create(
         model = FINE_TUNED_MODEL,
         messages = [
-            {"role": "user", "content": open_prompt}
+            {"role": "user", "content": prompt}
         ],
         temperature = 0.7,
-        max_tokens = 400)
+        max_tokens = 1024)
     text = response['choices'][0]['message']['content']
-    print(text)
     return text
 
 if __name__ == "__main__":
     print("hello")
-    story_path = "../../data/stories/ROC_stories/bad_scary_story.txt"
-    story = open(story_path, "r").read()
-    print(gpt_query_chat(story))
+    # prompt = "Karen was assigned a roomate her first year of college. Her roomate asked her to go to a nearby city for a concert. Karen agreed happily. The show was absolutely exhilarating.\
+    #             \n Rewrite this story but make it scarier. Ensure that \
+    #             \n 1. The length of the new story must be similar to the original story \
+    #             \n 2. The events must strictly follow this structure:\
+    #             \n 3. There must be no new events."
+    prompt = "Karen was assigned a roomate her first year of college. Her roomate asked her to go to a nearby city for a concert. Karen agreed happily. The show was absolutely exhilarating.\
+                \n Rewrite this story but make it scarier.Ensure that \
+                \n 1. The length of the new story must be similar to the original story\
+                \n 2. There must be no new events."
+    
+    print(gpt_query_chat(prompt))

@@ -1,9 +1,5 @@
 import networkx as nx
 
-# viewing character attributes
-# print(list(G.nodes))
-# print(G.nodes["Albert"])
-
 """
 Text should come in this format 1. <s, v, o, m>
 
@@ -11,13 +7,19 @@ Text should come in this format 1. <s, v, o, m>
 2. Anna, bought, corgi, from the store
 
 """
-def text_to_event_list(text):
-    print(text)
-    G = nx.Graph()
+def text_to_event_list_completion(text):
     # There are 2 newlines at the start
-    list_chars = text.split('\n')[2:]
+    list_events = text.split('\n')[2:]
+    return text_to_event_list(list_events)
+
+def text_to_event_list_chat(text):
+    # There aren't 2 newlines at the start
+    list_events = text.split('\n')
+    return text_to_event_list(list_events)
+
+def text_to_event_list(list_events):
     events = []
-    for i in list_chars:
+    for i in list_events:
         # Handle case where line is empty
         if len(i) == 0:
             continue
@@ -36,13 +38,6 @@ def text_to_event_list(text):
             "object": event_rep[2], 
             "modifier": event_rep[3]
         })
-
-        # Considering reader model construction
-        # G.add_node(char, subject = event_rep[0], 
-        #            verb = event_rep[1], 
-        #            object = event_rep[2], 
-        #            modifier = event_rep[3])
-    print(events)
     return events
 
 """
@@ -51,7 +46,7 @@ Plan:
 Text should come in this format 1. <s, v, o, m>
 
 Consider removing modifier for noise reasons.
-Consider using similarity checker to match ndoes to each other
+Consider using similarity checker to match nodes to each other
 "her roomate" vs "the roomate" should be the same (?)
 
 1. Albert, went, to the market, quickly
@@ -59,6 +54,8 @@ Consider using similarity checker to match ndoes to each other
 
 Construct labeled graph (s, o) edges, (v) vertices
 temporal component (in vertice) for when action happens. 
+
+TODO: Currently deprecated function. Doesn't support chat
 """
 
 def text_to_event_graph(text):
@@ -84,6 +81,7 @@ def text_to_event_graph(text):
         event_rep += filler
 
         subject, verb, object, modifier = event_rep
+        print(event_rep)
         G.add_edge(subject, object, verb = verb, order = event_num)
 
         event_num += 1
@@ -92,7 +90,7 @@ def text_to_event_graph(text):
     return G
 
 
-
+# do similarity
 
 if __name__ == "__main__":
     file = open('../../data/GPT-3_outputs/events/Karen.txt', 'r')

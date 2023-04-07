@@ -1,0 +1,5 @@
+Karen: college freshman, open to new experiences
+Roommate: college freshman, music enthusiast
+
+(Karen, Roommate, roommates)
+(Karen, Roommate, friends)
