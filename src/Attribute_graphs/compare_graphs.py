@@ -11,6 +11,8 @@ e: Character relationships
 """
 # Averaged exact-match of the attributes of each character in G1
 def compare_graphs_attributes_exact_match(G1, G2):
+    print(G1.nodes)
+    print(G2.nodes)
     similarity = []
     for char in G1.nodes:
         if char in G2.nodes:
@@ -19,10 +21,12 @@ def compare_graphs_attributes_exact_match(G1, G2):
             if len(attributes1) == 0:
                 continue
             attributes2 = G2.nodes[char]['attributes']
+            print(attributes1)
+            print(attributes2)
             common_list = set(attributes1).intersection(attributes2)
 
             total_len = max(len(attributes1), len(attributes2))
-            similarity.append(common_list / total_len)
+            similarity.append(len(common_list) / total_len)
     return sum(similarity) / max(len(G1.nodes), len(G2.nodes))
 
 # Averaged exact-match of the relatinoships of each character-pair in G2
@@ -47,6 +51,10 @@ def compare_graphs_attributes_semantic_similarity(G1, G2):
     for char in G1.keys():
         if char in G2:
             similarity.append(semantic_similarity(G1[char], G2[char]))
+
+    #Handle case for no matching characters
+    if len(similarity) == 0:
+        return 0
     return sum(similarity) / len(similarity)
 
 # Averaged semantic similarity of exact matched character pairs.
@@ -55,9 +63,15 @@ def compare_graphs_relationships_semantic_similarity(G1, G2):
     similarity = []
     G1 = concatenate_graph_edges(G1)
     G2 = concatenate_graph_edges(G2)
+    print("G1:" + str(G1))
+    print("G2:" + str(G2))
     for edge in G1.keys():
         if edge in G2:
             similarity.append(semantic_similarity(G1[edge], G2[edge]))
+
+    #Handle case for no matching character pairs
+    if len(similarity) == 0:
+        return 0
     return sum(similarity) / len(similarity)
 
 # Concatenates char attribute lists to a string for semantic comparison
@@ -90,12 +104,14 @@ def semantic_similarity(first, second):
 
 
 if __name__ == "__main__":
-    base_G = nx.read_gml("../../data/Character_graphs/basic_story.gml")
-    bad_G = nx.read_gml("../data/Character_graphs/bad_scary_story.gml")
-    good_G = nx.read_gml("../data/Character_graphs/good_scary_story.gml")
-    c_base_G = concatenate_graph(base_G)
-    c_bad_G = concatenate_graph(bad_G)
-    c_good_G = concatenate_graph(good_G)
-    print(compare_concatenated_graphs(c_base_G, c_bad_G))
-    print(compare_concatenated_graphs(c_base_G, c_good_G))
+    base_G = nx.read_gml("../../data/Character_graphs/GPT-4/base_story.gml")
+    bad_G = nx.read_gml("../../data/Character_graphs/GPT-4/bad_scary_story.gml")
+    good_G = nx.read_gml("../../data/Character_graphs/GPT-4/good_scary_story.gml")
+    # c_base_G = concatenate_graph(base_G)
+    # c_bad_G = concatenate_graph(bad_G)
+    # c_good_G = concatenate_graph(good_G)
+    # print(compare_concatenated_graphs(c_base_G, c_bad_G))
+    # print(compare_concatenated_graphs(c_base_G, c_good_G))
+    sim = compare_graphs_attributes_exact_match(base_G, good_G)
+    print(sim)
 

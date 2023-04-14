@@ -14,7 +14,7 @@ graph [
   edge [
     source 0
     target 1
-    relationship "roommates"
-    relationship "friends"
+    relationships "roommates"
+    relationships "friends"
   ]
 ]

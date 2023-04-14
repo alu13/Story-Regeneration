@@ -1,6 +1,6 @@
-from event_graph_generator import text_to_event_list_chat
-from gpt_query import gpt_query_chat
-from compare_graphs import compare_event_lists_semantic_similarity
+from .event_graph_generator import text_to_event_list_chat
+from .gpt_query import gpt_query_chat
+from .compare_graphs import compare_event_lists_semantic_similarity
 import networkx as nx
 
 def run_list_similarity(list1_path, list2_path):
@@ -25,11 +25,12 @@ def run_entire_process(story_path1, story_path2):
 
 if __name__ == "__main__":
     story_1_path = "../../data/stories/ROC_stories/story.txt"
-    story_2_path = "../../data/stories/ROC_stories/good_scary_story.txt"
+    story_2_path = "../../data/stories/ROC_stories/bad_scary_story.txt"
 
-    # similarity = run_entire_process(story_1_path, story_2_path)
+    similarity = run_entire_process(story_1_path, story_2_path)
+
     # print(similarity)
-    list1_path = "../../data/GPT-4_outputs/events/base_story.txt"
-    list2_path = "../../data/GPT-4_outputs/events/good_scary_story.txt"
-    similarity = run_list_similarity(list1_path, list2_path)
+    # list1_path = "../../data/GPT-4_outputs/events/base_story.txt"
+    # list2_path = "../../data/GPT-4_outputs/events/bad_scary_story.txt"
+    # similarity = run_list_similarity(list1_path, list2_path)
     print(similarity)
