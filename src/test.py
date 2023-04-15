@@ -1,4 +1,6 @@
-from Attribute_graphs.compare_graphs import test
+a = 0.34601977
+b = 0
+c = 0.29901117
 
-k = test()
-print(k)
+d = (a + b)/4 + c /2
+print(d)

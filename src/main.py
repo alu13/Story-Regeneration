@@ -6,7 +6,11 @@ def run_similarity_computation(story1_path, story2_path):
     attribute_sim = char_sim["attribute_similarity"]
     relationship_sim = char_sim["relationship_similarity"]
     event_sim = event_similarity(story1_path, story2_path)
-    average_sim = (attribute_sim + relationship_sim) / 2 + (event_sim) / 2
+    print("attribute_sim" + str(attribute_sim))
+    print("relationship_sim" + str(relationship_sim))
+    print("sum = " + str(attribute_sim + relationship_sim))
+    print("event_sim" + str(event_sim))
+    average_sim = (attribute_sim + relationship_sim) / 4 + (event_sim) / 2
     return {
         "attribute_sim": attribute_sim,
         "relationship_sim": relationship_sim,
