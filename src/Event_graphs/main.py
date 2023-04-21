@@ -19,9 +19,9 @@ def run_list_construction(story_path):
 
 
 def run_entire_process(story_path1, story_path2):
-    char_list1 = run_list_construction(story_path1)
-    char_list2 = run_list_construction(story_path2)
-    return compare_event_lists_semantic_similarity(char_list1, char_list2)
+    event_list1 = run_list_construction(story_path1)
+    event_list2 = run_list_construction(story_path2)
+    return compare_event_lists_semantic_similarity(event_list1, event_list2)
 
 if __name__ == "__main__":
     story_1_path = "../../data/stories/ROC_stories/story.txt"

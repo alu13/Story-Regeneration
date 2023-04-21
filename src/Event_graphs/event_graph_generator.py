@@ -81,7 +81,6 @@ def text_to_event_graph(text):
         event_rep += filler
 
         subject, verb, object, modifier = event_rep
-        print(event_rep)
         G.add_edge(subject, object, verb = verb, order = event_num)
 
         event_num += 1

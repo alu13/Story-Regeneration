@@ -1,6 +1,8 @@
 import networkx as nx
 from sentence_transformers import SentenceTransformer
 from sklearn.metrics.pairwise import cosine_similarity
+import numpy as np
+from scipy.optimize import linear_sum_assignment
 
 similarity_model = SentenceTransformer('sentence-transformers/all-MiniLM-L6-v2')
 
@@ -45,31 +47,49 @@ Attributes: subject, verb, object, modifier
 Output: Averaged semantic similarity of strings "s, v, o, m" of events in both lists.
 """
 def compare_event_lists_semantic_similarity(l1, l2):
-    print(l1)
-    print(l2)
-    similarity = []
     for i in range(len(l1)):
-        max_similarity = 0
+        l1[i] = ', '.join([l1[i].get(k) for k in ["subject", "verb", "object", "modifier"]])
+    for i in range(len(l2)):
+        l2[i] = ', '.join([l2[i].get(k) for k in ["subject", "verb", "object", "modifier"]])
+    # Uncomment to see the two event lists you can comparing
+    for i in l1:
+        print(i)
+    print("\n")
+    for i in l2:
+        print(i)
+    # Purpose of the max is to create cols of 0s if the list_of_events l2 is too short
+    similarity = np.zeros((len(l1), max(len(l2), len(l1))))
+    for i in range(len(l1)):
         for j in range(len(l2)):
-            vals1 = [l1[i].get(k) for k in ["subject", "verb", "object", "modifier"]]
-            vals2 = [l2[j].get(k) for k in ["subject", "verb", "object", "modifier"]]
-            event1 = ', '.join(vals1)
-            event2 = ', '.join(vals2)
-            curr_similarity = semantic_similarity(event1, event2)
-            print("event1 = " + str(event1))
-            print("event2 = " + str(event2))
-            print("similarity = " + str(curr_similarity))
+            curr_similarity = semantic_similarity(l1[i], l2[j])
+
             # Scale by difference in event numbers.
             # Equal events should not be far apart (timewise)
-
             total_len = max(len(l1), len(l2))
             scaling_factor = (total_len - abs(i - j)) / total_len
+            similarity[i, j] = curr_similarity * scaling_factor
 
-            if curr_similarity * scaling_factor >= max_similarity:
-                max_similarity = curr_similarity
+    max_similarity = np.sum(np.amax(similarity, axis=1)) / len(l1)
 
-    similarity.append(max_similarity)
-    return sum(similarity) / len(similarity)
+    # Performs maximal matching on a matrix of SS scorings between all events
+    # Ideally, events are 1-to-1, but that's often not the case, so deprecating.
+    # Still used for penalty term though.
+    rows, cols = linear_sum_assignment(similarity, maximize = True)
+    # matched_similarity = similarity[rows, cols].sum() / len(l1)
+
+    # Penalize if story 2 has TOO MANY EVENTS
+    extra_events = [i for i in range(len(l2)) if i not in cols]
+    print("extra_events" + str(extra_events))
+    # Closeness is a measure of how similar these extra events are to the original story
+    # i.e. if there is overlap between the orignial story and these events, then less penalty
+    closeness = np.sum(np.amax(similarity[:, extra_events], axis=0))
+    print("closeness" + str(closeness))
+
+    # 1 if story1 has more events than story2
+    event_penalty = min((len(l1) + closeness) / len(l2), 1)
+    print("event penalty: " + str(event_penalty))
+    print("max similarity: " + str(max_similarity))
+    return max_similarity * event_penalty
 
 # Computes the semantic similarity of two sentences
 # Takes model embeddings of phrases and computes their cosine similarities

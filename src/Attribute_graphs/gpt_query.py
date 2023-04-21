@@ -39,11 +39,12 @@ Uses the "Chat" openai endpoint
 """
 
 def gpt_query_chat(story):
-    open_prompt = story + "\n " + "List all characters and their attributes below. Then list all relationships between characters below that: \
+    open_prompt = story + "\n " + "List all main characters and their attributes below. Then list all relationships between characters below that: \
         \n Example format: \
         \n Albert: good at math, smart \
         \n Anna: cool, popular \
-        \n (Albert, Anna, friends)"
+        \n (Albert, Anna, friends) \
+        \n If there is a character 'I', refer to them as Protagonist"
  
     print(open_prompt)
     response = openai.ChatCompletion.create(
@@ -51,7 +52,7 @@ def gpt_query_chat(story):
         messages = [
             {"role": "user", "content": open_prompt}
         ],
-        temperature = 0.7,
+        temperature = 0,
         max_tokens = 400)
     text = response['choices'][0]['message']['content']
     print(text)

@@ -49,6 +49,10 @@ def list_to_graph(list_lines):
             else:
                 G.add_edge(node1, node2, relationships = [relationship])
             continue
+
+        # Handle case where it states like "Relationships:" or "Attributes:"
+        if len(line.split(": ")) != 2:
+               continue
         char, attributes = line.split(': ')
         G.add_node(char, attributes = attributes.split(', '))
     G = cleanup_graph(G)
@@ -61,7 +65,7 @@ def cleanup_graph(G):
         # Handle case where a node got deleted
         if i not in G:
             continue
-        if (i.lower() in j.lower()) or (j.lower() in i.lower()):
+        if ((i.lower() in j.lower()) or (j.lower() in i.lower())) and apostrophy_check(i, j) == False:
             G.nodes[i]["attributes"] += G.nodes[j]["attributes"]
 
             # replace edges
@@ -72,6 +76,15 @@ def cleanup_graph(G):
                     G.edges[i, neighbor]["relationships"] += G.edges[j, neighbor]["relationships"]
             G.remove_node(j)
     return G
+
+# Check if merged nodes are like "Jack, Jack's Brother"
+# Don't want to merge those even though there is overlap
+def apostrophy_check(char1, char2):
+    char1_possesive = char1 + "'s"
+    char2_possessive = char2 + "'s"
+    if (char1_possesive.lower() in char2.lower()) or (char2_possessive.lower() in char1.lower()):
+        return True
+    return False
 
 if __name__ == "__main__":
     file = open('../../data/GPT-4_outputs/attributes/bad_scary_story.txt', 'r')

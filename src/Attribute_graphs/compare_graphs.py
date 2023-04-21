@@ -82,8 +82,6 @@ def compare_graphs_relationships_semantic_similarity(G1, G2, comparison_type = "
     similarity = []
     G1 = concatenate_graph_edges(G1)
     G2 = concatenate_graph_edges(G2)
-    print("G1:" + str(G1))
-    print("G2:" + str(G2))
     bar = 0.7
     if comparison_type == "hard":
         for rel in G1.keys():
@@ -111,8 +109,6 @@ def compare_graphs_relationships_semantic_similarity(G1, G2, comparison_type = "
 def concatenate_graph_attributes(G):
     concat_dict = {}
     for i in G.nodes:
-        print(G.nodes)
-        print(G.nodes[i])
         attributes = G.nodes[i]['attributes']
         concat_dict[i] = ", ".join(attributes)
     return concat_dict
@@ -141,16 +137,13 @@ def overlap_compare_rels(rel1, rel2):
     # case where (1, 0) = (1, 0)
     if ((rel1[0].lower() in rel2[0].lower()) or (rel2[0].lower() in rel1[0].lower()) and
         (rel1[1].lower() in rel2[1].lower()) or (rel2[1].lower() in rel1[1].lower())):
-        print("in here")
         return True
     
     # case where (0, 1) == (1, 0) 
     # rel edges are bidirectional so we have to check both
     elif ((rel1[1].lower() in rel2[0].lower()) or (rel2[0].lower() in rel1[1].lower()) and
         (rel1[0].lower() in rel2[1].lower()) or (rel2[1].lower() in rel1[0].lower())):
-        print("here instead")
         return True
-    print("return false")
     return False
 
 # Check if two relationships are semantically similar

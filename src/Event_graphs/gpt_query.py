@@ -21,17 +21,18 @@ def gpt_query_completion(story):
 
 def gpt_query_chat(story):
 
-    open_prompt = story + "\n " + "List all events that happened in this passage in the format: \
+    open_prompt = story + "\n " + "List all high-level events that happened in this passage in the format: \
         \n 1. Character, verb, object, modifier \
         \n 2. Character, verb, object, modifier \
-        \n 3. Character, verb, object, modifier"
-    # print(open_prompt)
+        \n 3. Character, verb, object, modifier \
+        \n If there is a character 'I', refer to them as Protagonist"
+    print(open_prompt)
     response = openai.ChatCompletion.create(
         model = FINE_TUNED_MODEL,
         messages = [
             {"role": "user", "content": open_prompt}
         ],
-        temperature = 0.7,
+        temperature = 0,
         max_tokens = 400)
     text = response['choices'][0]['message']['content']
     print(text)

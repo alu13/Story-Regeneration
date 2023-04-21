@@ -1,0 +1,6 @@
+Jake: needs a ride, determined, independent
+Girlfriend: working, unwilling to help
+Brother: watching a movie, unwilling to help
+
+(Jake, Girlfriend, dating)
+(Jake, Brother, siblings)

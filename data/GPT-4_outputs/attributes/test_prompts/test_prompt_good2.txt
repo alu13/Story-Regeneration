@@ -1,0 +1,6 @@
+Jake: needs a ride, resourceful
+Girlfriend: working, unavailable
+Brother: watching a movie, uncooperative
+
+(Jake, Girlfriend, dating)
+(Jake, Brother, siblings)
