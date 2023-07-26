@@ -1,5 +1,10 @@
 import openai
-openai.api_key = "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"
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
+
+openai.api_key = os.environ.get("OPENAI_API_KEY")
 FINE_TUNED_MODEL = "gpt-4"
 
 # Gets a GPT-3 Curie fine-tuned model response to a query
